@@ -1,35 +1,51 @@
+#include <stdlib.h>
 #include "lists.h"
 #include <string.h>
-#include <stdio.h>
 
 /**
- * add_node - add a new node at the beginning of `list_t` list
- * @head: double pointer to head
- * @str: string to be saved in new node, must be duplicated
- * Return: Address of new element or NULL if failed
+ * add_node_end - Add a new element to a list_t list at the end
+ * @head: Pointer to pointer to start of the list
+ * @str: String to copy to str element of list_t item
+ *
+ * Return: Address of new element, NULL if fails
  */
-list_t *add_node(list_t **head, const char *str)
+list_t *add_node_end(list_t **head, const char *str)
 {
-	list_t *new_node;
-	int c;
+	list_t *new;
+	list_t *current;
+	unsigned int i;
 
-	for (c = 0; dup_str[c] != '\0'; c++)
-		;
-	new_node = malloc(sizeof(list_t));
-	if (new_node == NULL)
+	i = 0;
+	if (*head == NULL)
 	{
-		free(new_node);
-		return (NULL);
+		new = malloc(sizeof(list_t));
+		if (new == NULL)
+			return (NULL);
+		new->next = NULL;
+		*head = new;
+		new->str = strdup(str);
+		while (str[i] != '\0')
+			i++;
+		new->len = i;
 	}
-	new_node->str = strdup(str);
-	if (new_node->str == NULL)
+	else
 	{
-		free(new_node);
-		return (NULL);
+		current = *head;
+		while (1)
+		{
+			if (current->next == NULL)
+				break;
+			current = current->next;
+		}
+		new = malloc(sizeof(list_t));
+		if (new == NULL)
+			return (NULL);
+		new->next = NULL;
+		current->next = new;
+		new->str = strdup(str);
+		while (str[i] != '\0')
+			i++;
+		new->len = i;
 	}
-	new_node->len = c;
-	new_node->next = *head;
-
-	*head = new_node;
-	return (*head);
+	return (new);
 }
