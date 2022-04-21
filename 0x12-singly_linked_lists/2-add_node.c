@@ -1,30 +1,28 @@
+#include <stdlib.h>
 #include "lists.h"
+#include <string.h>
+
 /**
- * add_node - Entry Point
- * @head: input
- * @str: string
- * Return: 0
+ * add_node - Add an element to a list at the front of the list
+ * @head: Pointer to the pointer to the start of the list
+ * @str: Pointer to the string to be put into the element of the list
+ *
+ * Return: Address of new element, or NULL if it failed
  */
 list_t *add_node(list_t **head, const char *str)
 {
-	int i, count = 0;
 	list_t *new;
+	unsigned int i;
 
-	if (head == NULL)
-		return (NULL);
-
+	i = 0;
 	new = malloc(sizeof(list_t));
 	if (new == NULL)
 		return (NULL);
-
-	for (i = 0; str[i] != '\0'; i++)
-		count++;
-
-	new->len = i;
 	new->str = strdup(str);
+	while (str[i] != '\0')
+		i++;
+	new->len = i;
 	new->next = *head;
-
 	*head = new;
-
-	return (new);
+	return (*head);
 }
