@@ -1,53 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
 
 /**
- * read_textfile - reads a text file and prints it to standard output
- * @filename: file to read and print
- * @letters: number of letters it should read and print
- *
- * Return: actual number of letters read and printed
+ * read_textfile - that reads a text file and prints
+ * @filename: variable pointer
+ * @letters: size letters
+ * Description: Write a function that reads a text file and prints it
+ * to the POSIX standard output.
+ * Return: the actual number of letters it could read and print, 0 otherwise
  */
 
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	int fd, close_check;
-	char *buffer;
-	ssize_t read_actual, write_actual;
+	ssize_t file, let, w;
+	char *text;
 
-	if (filename == NULL || letters <= 0)
-		return (0);
-	fd = open(filename, O_RDWR);
-	if (fd == -1)
+	text = malloc(letters);
+	if (text == NULL)
 		return (0);
 
-	buffer = malloc(sizeof(char) * letters);
-	if (buffer == NULL)
+	if (filename == NULL)
+		return (0);
+
+	file = open(filename, O_RDONLY);
+
+	if (file == -1)
 	{
-		close(fd);
+		free(text);
 		return (0);
 	}
 
-	read_actual = read(fd, buffer, letters);
-	if (read_actual == -1)
-	{
-		free(buffer);
-		return (0);
-	}
+	let = read(file, text, letters);
 
-	close_check = close(fd);
-	if (close_check == -1)
-	{
-		free(buffer);
-		return (0);
-	}
+	w = write(STDOUT_FILENO, text, let);
 
-	write_actual = write(STDOUT_FILENO, buffer, read_actual);
-	if (write_actual == -1 || write_actual != read_actual)
-	{
-		free(buffer);
-		return (0);
-	}
+	close(file);
 
-	free(buffer);
-	return (write_actual);
+	return (w);
 }
